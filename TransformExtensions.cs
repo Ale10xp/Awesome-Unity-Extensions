@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,28 +7,21 @@ public static class TransformExtensions {
 
 #region LookAt
 
-/*
-	//test not working
-	public static void LerpLookAt(this Transform who, Vector3 target,float smoothTime){
 
-		Vector3 currentRotation, nextRotation;
+	
+	public static void LerpLookAt(this Transform who, Transform target, float smoothTime){
 
-        currentRotation = who.localEulerAngles;
-        nextRotation = currentRotation;
 
-		//Modification
-        who.LookAt(target);
+		Vector3 direction = target.transform.position - who.transform.position;
+		Quaternion rotation = Quaternion.LookRotation(direction);
+		Vector3 target_angle = new Vector3(rotation.x, rotation.y, rotation.z);
 
-		#region lerp
-        nextRotation = who.localEulerAngles;
-
-        currentRotation.LerpRotation(nextRotation, smoothTime);
-		#endregion
+		who.localEulerAngles = LerpAngle(who.localEulerAngles, target_angle, smoothTime);
 
 
 	}
 
-*/
+
 
 
 #endregion
@@ -1459,47 +1452,146 @@ public static class TransformExtensions {
 		who.localEulerAngles = actualRotation; 
 	}
 
-	public static float SomaDEZ(this float number){
 
-		return number += 10;
-	}
+ //Version Jun/2021 1.10
+#region Teleport
 
-	public static int SomaDEZ(this int number){
-
-		return number += 10;
-	}
+	public static void Teleport(this Transform who, Vector3 toWhere){
 
 
+		who.position = new Vector3(toWhere.x, toWhere.y, toWhere.z);
 
-
-
-
-
-	public static float Marcos(this (int) float number){
-
-		return Mathf.Pow(number,4);
-	}
-
-	
-	public static int Marcos(this int number){
-
-		return (int) Mathf.Pow(number,4));
 
 	}
 
+	public static void Teleport(this Transform who, Vector2 toWhere){
 
 
-
-
-
-
-
-	public static string Marcos(this string text){
-
-		return text += " Marcos.... Esse é meu nome =D";
+		who.position = new Vector3(toWhere.x, toWhere.y, who.position.z);
+		
 
 	}
 
+	public static void Teleport(this Transform who, Transform toWhere){
+
+
+		who.position = new Vector3(toWhere.position.x, toWhere.position.y, toWhere.position.z);
+
+
+	}
+
+	public static void Teleport(this Transform who, GameObject toWhere){
+
+
+		who.position = new Vector3(toWhere.transform.position.x, toWhere.transform.position.y, toWhere.transform.position.z);
+
+
+	}
+
+
+
+	public static void Teleport(this GameObject who, Vector3 toWhere){
+
+
+		who.transform.position = new Vector3(toWhere.x, toWhere.y, toWhere.z);
+
+
+	}
+
+	public static void Teleport(this GameObject who, Vector2 toWhere){
+
+
+		who.transform.position = new Vector3(toWhere.x, toWhere.y, who.transform.position.z);
+		
+
+	}
+
+	public static void Teleport(this GameObject who, Transform toWhere){
+
+
+		who.transform.position = new Vector3(toWhere.position.x, toWhere.position.y, toWhere.position.z);
+
+
+	}
+
+	public static void Teleport(this GameObject who, GameObject toWhere){
+
+
+		who.transform.position = new Vector3(toWhere.transform.position.x, toWhere.transform.position.y, toWhere.transform.position.z);
+		
+
+	}
+
+#endregion
+
+
+#region Vector3 Lerp Angle
+
+	public static Vector3 LerpAngle(this Vector3 what, Vector3 newWhat, float smoothTime){
+
+		//atribuição
+
+		Vector3 currentWhat, nextWhat;
+        currentWhat = what;
+        nextWhat = currentWhat;
+
+        what = new Vector3(newWhat.x,newWhat.y, newWhat.z);
+
+        nextWhat = what;
+
+        //Mudança
+        if (currentWhat.x != nextWhat.x)
+        {
+
+            what.x = Mathf.LerpAngle(currentWhat.x, nextWhat.x, smoothTime);
+
+            currentWhat.x = nextWhat.x;
+        }
+
+		if (currentWhat.y != nextWhat.y)
+        {
+
+            what.y = Mathf.LerpAngle(currentWhat.y, nextWhat.y, smoothTime);
+
+            currentWhat.y = nextWhat.y;
+        }
+
+		if (currentWhat.z != nextWhat.z)
+        {
+
+            what.z = Mathf.LerpAngle(currentWhat.z, nextWhat.z, smoothTime);
+
+            currentWhat.z = nextWhat.z;
+        }
+
+
+        //Retorno
+		return what;
+
+
+
+		
+	}
+
+
+
+#endregion
+
+#region Move 
+
+	public static void Move2d(this Transform who, Vector3 _position, float _speed ){
+
+		who.position = Vector2.MoveTowards(who.position, _position, _speed * Time.deltaTime);
+
+	}
+
+	public static void Move(this Transform who, Vector3 _position, float _speed ){
+
+		who.position = Vector3.MoveTowards(who.position, _position, _speed * Time.deltaTime);
+
+	}
+
+#endregion
 
 }
 
