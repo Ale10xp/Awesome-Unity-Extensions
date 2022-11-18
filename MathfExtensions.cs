@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -159,8 +159,8 @@ public static class MathfExtensions {
 		
 
 	}
-    
-	public static Vector3 LerpAngle(this Vector3 what, Vector3 newWhat, float smoothTime){
+
+	public static Vector3 Vector3LerpToAngle(this Vector3 what, Vector3 newWhat, float smoothTime){
 
 		//atribuição
 		Vector3 currentWhat, nextWhat;
@@ -200,6 +200,45 @@ public static class MathfExtensions {
 
 	}
 
+    public static Vector3 Vector3LerpAngle(Vector3 what, Vector3 newWhat, float smoothTime){
+
+		//atribuição
+		Vector3 currentWhat, nextWhat;
+        currentWhat = what;
+        nextWhat = currentWhat;
+
+        what = new Vector3(newWhat.x,newWhat.y,newWhat.z);
+
+        nextWhat = what;
+
+        if (currentWhat.x != nextWhat.x)
+        {
+
+            what.x = Mathf.LerpAngle(currentWhat.x, nextWhat.x, smoothTime);
+
+            currentWhat.x = nextWhat.x;
+        }
+
+		if (currentWhat.y != nextWhat.y)
+        {
+
+            what.y = Mathf.LerpAngle(currentWhat.y, nextWhat.y, smoothTime);
+
+            currentWhat.y = nextWhat.y;
+        }
+
+		if (currentWhat.z != nextWhat.z)
+        {
+
+            what.z = Mathf.LerpAngle(currentWhat.z, nextWhat.z, smoothTime);
+
+            currentWhat.z = nextWhat.z;
+        }
+
+		return what;
+		
+
+	}
 
     //working version 0.2 [30/07/21]
     public static Color MapColor(Color colorA, Color colorB, Color colorC, float x, float min, float max)
@@ -209,8 +248,8 @@ public static class MathfExtensions {
         Color b_to_c = MapColor(colorB, colorC, x, (max-min)/2, max);
         Color actualColor;
 
-        /*
-        #region test
+/*
+#region test
         float initial_r, initial_g, initial_b, initial_a;
         float midle_r, midle_g, midle_b, midle_a;
 
@@ -256,8 +295,8 @@ public static class MathfExtensions {
         // green = RGBA is (0, 1, 0, 1).
         // red =  RGBA is(1, 0, 0, 1).
 
-        #endregion
-        */
+#endregion
+*/
 
         if(x <= ((max-min)/2) )
         {
@@ -273,7 +312,7 @@ public static class MathfExtensions {
 
     }
 
-    /*
+/*
      public static Color MapColor(Color[] arrColors, float x, float min, float max)
     {
 
@@ -357,7 +396,7 @@ public static class MathfExtensions {
         return actualColor;
 
     }
-    */
+*/
     
     public static Color MapColor(Color[] colors, float x, float min, float max){
 
@@ -367,7 +406,7 @@ public static class MathfExtensions {
             //colors.Length if 3 colors = 3
             //colors.Length if 4 colors = 4
 
-            /*
+/*
             if (colors.Length %2 == 0){
                 
                 for (int i = 0; i < colors.Length-3; i++)
@@ -400,7 +439,7 @@ public static class MathfExtensions {
 
             }
 
-            */
+*/
 
             if(x <= ( (max-min) / (colors.Length-1) ) )
                 {
@@ -420,14 +459,16 @@ public static class MathfExtensions {
     public static Color MapColor(Color colorA, Color colorB, float x, float min, float max)
     {
         Color actualColor = new Color(
-            Map(x, min, max, colorA.r, colorB.r), 
+            Map(x, min, max, colorA.r, colorB.r),
             Map(x, min, max, colorA.g, colorB.g),
-            Map(x, min, max, colorA.b, colorB.b), 
-            Map(x, min, max, colorA.a, colorB.a) );
+            Map(x, min, max, colorA.b, colorB.b),
+            Map(x, min, max, colorA.a, colorB.a));
 
         return actualColor;
 
     }
+
+
 
 
     //working version 0.2 [30/07/21]
@@ -439,47 +480,29 @@ public static class MathfExtensions {
 
             float actualX, actualY, actualZ, actualW;
 
-
-            float[] initialAxes = null;
-
-            initialAxes[0] = initialQuaternion.x;
-            initialAxes[1] = initialQuaternion.y;
-            initialAxes[2] = initialQuaternion.z;
-            initialAxes[3] = initialQuaternion.w;
-
-            float[] finalAxes = null;
-            
-            finalAxes[0] = finalQuaternion.x;
-            finalAxes[1] = finalQuaternion.y;
-            finalAxes[2] = finalQuaternion.z;
-            finalAxes[3] = finalQuaternion.w;
-
-            float[] actualAxes = Map(x, min, max, initialAxes, finalAxes);
-
-            /*
             actualX = Map(x, min, max, initialQuaternion.x, finalQuaternion.x);
             actualY = Map(x, min, max, initialQuaternion.y, finalQuaternion.y);
             actualZ = Map(x, min, max, initialQuaternion.z, finalQuaternion.z);
             actualW = Map(x, min, max, initialQuaternion.w, finalQuaternion.w);
-            */
 
-            Quaternion actualQuaternion = new Quaternion(actualAxes[0], actualAxes[1], actualAxes[2], actualAxes[3]);
+            Quaternion actualQuaternion = new Quaternion(actualX, actualY, actualZ, actualW);
 
             return actualQuaternion;
 
     }
 
     public static Vector3 MapAngle(Vector3 rotationA, Vector3 rotationB, float x, float min, float max)
-    {  
+    {
         return Vector3Map(rotationA, rotationB, x, min, max);
     }
 
-    public static Vector3 Vector3Map(Vector3 rotationA, Vector3 rotationB, float x, float min, float max){
+    public static Vector3 Vector3Map(Vector3 rotationA, Vector3 rotationB, float x, float min, float max)
+    {
 
 
         Vector3 actualRotation = new Vector3(
-        Map(x, min, max, rotationA.x, rotationB.x), 
-        Map(x, min, max, rotationA.y, rotationB.y), 
+        Map(x, min, max, rotationA.x, rotationB.x),
+        Map(x, min, max, rotationA.y, rotationB.y),
         Map(x, min, max, rotationA.z, rotationB.z));
 
         return actualRotation;
@@ -530,29 +553,29 @@ public static class MathfExtensions {
 
     }
 
-/* //test arr v0.2
-    public static float Map(float[] arr_X, float[] arr_in_min, float[] arr_in_max, float[] arr_out_min, float[] arr_out_max)
-    {
-
-        for (int i = 0; i < arr_X.Length; i++)
+    /* //test arr v0.2
+        public static float Map(float[] arr_X, float[] arr_in_min, float[] arr_in_max, float[] arr_out_min, float[] arr_out_max)
         {
-            return (arr_X[i] - arr_in_min[i]) * (arr_out_max[i] - arr_out_min[i]) / (arr_in_max[i] - arr_in_min[i]) + arr_out_min[i];   
+
+            for (int i = 0; i < arr_X.Length; i++)
+            {
+                return (arr_X[i] - arr_in_min[i]) * (arr_out_max[i] - arr_out_min[i]) / (arr_in_max[i] - arr_in_min[i]) + arr_out_min[i];   
+            }
+
+
         }
-
-        
-    }
-*/
-
+    */
 
     public static float[] Map(float x, float min, float max, float[] floatA, float[] floatB)
     {
-        float[] valuesMapeds = null; 
+        float[] valuesMapeds = null;
 
-        if(floatA.Length == floatB.Length){
+        if (floatA.Length == floatB.Length)
+        {
 
             for (int i = 0; i < floatA.Length; i++)
             {
-                valuesMapeds[i] = Map(x, min, max, floatA[i], floatB[i]);   
+                valuesMapeds[i] = Map(x, min, max, floatA[i], floatB[i]);
             }
 
         }
@@ -565,5 +588,94 @@ public static class MathfExtensions {
     {
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
     }
+
+
+    //LerpMap 24/06/22 testing
+    public static float LerpMap(float value, float min, float max, float new_min, float new_max, float smoothTime)
+    {
+
+        //mudança
+        float x = Map(value, min, max, new_min, new_max);
+
+        //lerp 
+        return Lerp(value, x, smoothTime);
+
+    }
+
+    public static float MapLerp(float value, float min, float max, float new_min, float new_max, float smoothTime)
+    {
+
+        //mudança
+        float x = Map(value, min, max, new_min, new_max);
+
+        //lerp 
+        return Lerp(value, x, smoothTime);
+
+    }
+
+
+
+    //ClampVector3 24/06/22 Working
+    public static Vector3 ClampVector3(Vector3 value, Vector3 min, Vector3 max)
+    {
+        return new Vector3(Mathf.Clamp(value.x, min.x, max.x), Mathf.Clamp(value.y, min.y, max.y), Mathf.Clamp(value.z, min.z, max.z));
+
+    }
+
+    public static Vector3 ClampThisVector3(this Vector3 value, Vector3 min, Vector3 max)
+    {
+        return new Vector3(Mathf.Clamp(value.x, min.x, max.x), Mathf.Clamp(value.y, min.y, max.y), Mathf.Clamp(value.z, min.z, max.z));
+
+    }
+
+    public static Vector3 ClampThisVector3Axis(this Vector3 value, string AXIS, float min, float max)
+    {
+        Vector3 Value_new = value;
+
+        if (AXIS == "x")
+        {
+            Value_new = new Vector3(Mathf.Clamp(value.x, min, max), Value_new.y, Value_new.z);
+
+        }
+
+        else if (AXIS == "y")
+        {
+            Value_new = new Vector3(Value_new.x, Mathf.Clamp(value.y, min, max), Value_new.z);
+        }
+
+        else if (AXIS == "z")
+        {
+            Value_new = new Vector3(Value_new.x, Value_new.y, Mathf.Clamp(value.z, min, max));
+        }
+
+        return Value_new;
+
+    }
+
+    public static Vector3 ClampVector3Axis(Vector3 value, string AXIS, float min, float max)
+    {
+        Vector3 Value_new = value;
+
+        if (AXIS == "x")
+        {
+            Value_new = new Vector3(Mathf.Clamp(value.x, min, max), Value_new.y, Value_new.z);
+
+        }
+
+        else if (AXIS == "y")
+        {
+            Value_new = new Vector3(Value_new.x, Mathf.Clamp(value.y, min, max), Value_new.z);
+        }
+
+        else if (AXIS == "z")
+        {
+            Value_new = new Vector3(Value_new.x, Value_new.y, Mathf.Clamp(value.z, min, max));
+        }
+
+        return Value_new;
+
+    }
+
+
 
 }
