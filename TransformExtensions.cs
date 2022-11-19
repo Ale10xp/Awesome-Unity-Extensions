@@ -5,7 +5,7 @@ using UnityEngine;
 public static class TransformExtensions {
 
 
-#region LookAt
+#region LerpLookAt
 
 
 	
